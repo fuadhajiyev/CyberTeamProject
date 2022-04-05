@@ -56,15 +56,14 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
 		if (token != null) {
 
-			token = token.replace(SecurityConstants.getTokenSecret(), "");
+			token = token.replace(SecurityConstants.TOKEN_PREFIX, "");
 
 //  <<<    JWT Jackson error "Illegal character...  >>>>
-//			String user = Jwts.parser()
-//					.setSigningKey(SecurityConstants.getTokenSecret())
-//					.parseClaimsJws(token)
-//					.getBody().getSubject();
-			
-			String user = token;
+			String user = Jwts.parser()
+					.setSigningKey(SecurityConstants.getTokenSecret())
+					.parseClaimsJws(token)
+					.getBody().getSubject();
+
 
 			if (user != null) {
 				return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
