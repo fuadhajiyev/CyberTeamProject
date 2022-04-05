@@ -1,13 +1,9 @@
 package com.appsdeveloperblog.app.ws.security;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+
 import java.util.ArrayList;
-import java.util.zip.GZIPInputStream;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -21,10 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import com.appsdeveloperblog.app.ws.shared.dto.UserDto;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 
 public class AuthorizationFilter extends BasicAuthenticationFilter {
@@ -58,7 +50,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
 			token = token.replace(SecurityConstants.TOKEN_PREFIX, "");
 
-//  <<<    JWT Jackson error "Illegal character...  >>>>
+//  <<<    JWT Jackson error "Illegal character Fixed...  >>>>
 			String user = Jwts.parser()
 					.setSigningKey(SecurityConstants.getTokenSecret())
 					.parseClaimsJws(token)
