@@ -1,18 +1,24 @@
 package com.appsdeveloperblog.app.ws.shared;
 
 import java.security.SecureRandom;
-import java.util.Random;
 
+import java.util.*;
+import org.springframework.context.weaving.DefaultContextLoadTimeWeaver;
 import org.springframework.stereotype.Component;
 
+import com.appsdeveloperblog.app.ws.security.SecurityConstants;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class Utils {
 
 	private final Random RANDOM = new SecureRandom();
 	private final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvxyz";
-	//private final int ITERATIONS = 10000;
-	//private final int KEY_LENGTH = 256;
+	// private final int ITERATIONS = 10000;
+	// private final int KEY_LENGTH = 256;
 
 	public String generateUserId(int length) {
 
@@ -30,5 +36,54 @@ public class Utils {
 		return new String(returnValue);
 
 	}
+
+	public static boolean hasTokenExpired(String token) {
+		Claims claims = Jwts.parser()
+				.setSigningKey(SecurityConstants.getTokenSecret() )
+				.parseClaimsJws(token).getBody();
+
+		Date tokenExpiraDate = claims.getExpiration();
+		Date todayDate = new Date();
+
+		return tokenExpiraDate.before(todayDate);
+	}
+	
+	
+	
+	public String generateEmailVerificationToken(String userId) {
+		String token = Jwts.builder()
+				.setSubject(userId)
+				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+				.signWith(SignatureAlgorithm.HS256, SecurityConstants.getTokenSecret())
+				.compact();
+		
+		return token;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

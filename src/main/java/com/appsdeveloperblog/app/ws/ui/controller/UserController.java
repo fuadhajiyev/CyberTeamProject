@@ -77,7 +77,7 @@ public class UserController {
 
 	@DeleteMapping(path = "/{id}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public OperationStatusModel deleteUser(@PathVariable String id) {
-		
+
 		OperationStatusModel returnValue = new OperationStatusModel();
 		returnValue.setOperationName(RequestOperationName.DELETE.name());
 		userService.deleteUser(id);
@@ -86,22 +86,51 @@ public class UserController {
 		return returnValue;
 
 	}
-	
+
 	@GetMapping(produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	public List<UserRest>  getUsers(@RequestParam(value="page", defaultValue="0") int page,
-			@RequestParam(value="limit", defaultValue = "5") int limit){
-		
+	public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "limit", defaultValue = "5") int limit) {
+
 		List<UserRest> returnValue = new ArrayList<>();
-		
+
 		List<UserDto> users = userService.getUsers(page, limit);
-		
-		for(UserDto userDto : users) {
+
+		for (UserDto userDto : users) {
 			UserRest userModel = new UserRest();
 			BeanUtils.copyProperties(userDto, userModel);
 			returnValue.add(userModel);
 		}
-		return  returnValue;
+		
+		return returnValue;
 	}
-	
+
+	/*
+	 * 
+	 * 
+//     server.servlet.context-path=/blog-app-ws
+	 * http://localhost:8080/blog-app-ws/users/email-verification?token=sasadaf
+	 * 
+	 */
+	@GetMapping(path = "/email-verification",produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
+
+		OperationStatusModel returnValue = new OperationStatusModel();
+
+		returnValue.setOperationResult(RequestOperationName.VERIFY_EMAIL.name());
+		
+		boolean isVerified = userService.verifyEmailToken(token);
+		
+		if(isVerified) {
+			returnValue.setOperationName(RequestOperationStatus.SUCCESS.name());
+		}else {
+			returnValue.setOperationName(RequestOperationStatus.ERROR.name());
+
+		}
+		
+
+		
+		return returnValue;
+
+	}
 
 }
