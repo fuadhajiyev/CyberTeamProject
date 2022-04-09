@@ -14,8 +14,7 @@ public class SecurityConstants {
 	
 	
 	// AMAZON SES ACCSESS AND SECRET KEY
-	public static final String ACCESS_KEY = "AKIA2EO26A42FS25DGXD";
-	public static final String SECRET_KEY= "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";
+
 	
 	public static String getTokenSecret() {
 		
